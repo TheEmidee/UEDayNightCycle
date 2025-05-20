@@ -289,9 +289,11 @@ void UDNCWorldSubsystem::SetCurrentPeriod( const int period_index )
         } );
     }
 
-    OnPeriodChangedDelegate.Broadcast( CurrentPeriod, new_period );
+    auto old_period = CurrentPeriod;
 
     CurrentPeriod = new_period;
+
+    OnPeriodChangedDelegate.Broadcast( old_period, new_period );
 
     if ( DayDefinition->Periods.Num() > 1 )
     {
