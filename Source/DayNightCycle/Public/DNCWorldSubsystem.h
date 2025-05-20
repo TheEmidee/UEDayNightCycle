@@ -17,6 +17,8 @@ class DAYNIGHTCYCLE_API UDNCWorldSubsystem final : public UTickableWorldSubsyste
 public:
     UDNCWorldSubsystem();
 
+    FDNCOnPeriodChangedDelegate & OnPeriodChanged();
+
     void Tick( float delta_time ) override;
     bool IsTickable() const override;
 
@@ -99,7 +101,7 @@ private:
     float DilatedTimeSpeed;
 
     UPROPERTY( BlueprintAssignable )
-    FDNCOnPeriodChangedDelegate OnPeriodChanged;
+    FDNCOnPeriodChangedDelegate OnPeriodChangedDelegate;
 
     float TimeSpeed;
     bool bIsPaused;
@@ -110,3 +112,8 @@ private:
     TOptional< FDNCTimeStamp > PendingCurrentTime;
     ETransitionState TransitionState;
 };
+
+FORCEINLINE FDNCOnPeriodChangedDelegate & UDNCWorldSubsystem::OnPeriodChanged()
+{
+    return OnPeriodChangedDelegate;
+}

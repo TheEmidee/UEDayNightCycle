@@ -289,7 +289,7 @@ void UDNCWorldSubsystem::SetCurrentPeriod( const int period_index )
         } );
     }
 
-    OnPeriodChanged.Broadcast( CurrentPeriod, new_period );
+    OnPeriodChangedDelegate.Broadcast( CurrentPeriod, new_period );
 
     CurrentPeriod = new_period;
 
