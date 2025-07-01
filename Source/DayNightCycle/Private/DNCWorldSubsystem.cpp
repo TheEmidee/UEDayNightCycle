@@ -49,7 +49,6 @@ UDNCWorldSubsystem::UDNCWorldSubsystem() :
     DilatedTimeSpeed( 1.0f ),
     TimeSpeed( 1.0f ),
     bIsPaused( false ),
-    bCanTransition( true ),
     TransitionState( ETransitionState::WaitingToTransition )
 {
 }
@@ -68,7 +67,6 @@ void UDNCWorldSubsystem::Tick( float delta_time )
     {
         CurrentTime -= DayInSecondsTime;
         use_last_period_if_no_period_matches = true;
-        bCanTransition = true;
     }
 
     UpdateCurrentPeriod( use_last_period_if_no_period_matches );
@@ -305,7 +303,6 @@ void UDNCWorldSubsystem::SetCurrentPeriod( const int period_index )
         if ( delta.ToSeconds() < 0 )
         {
             delta = FDNCTime( 24, 0 ) - CurrentPeriod->StartTime + NextPeriod->StartTime;
-            bCanTransition = false;
         }
 
         DilatedTimeSpeed = delta.ToSeconds() / CurrentPeriod->RealTimeDuration.ToSeconds();
@@ -346,10 +343,10 @@ void UDNCWorldSubsystem::TriggerTransitionEvents( float delta_time )
     {
         case ETransitionState::WaitingToTransition:
         {
-            if ( bCanTransition &&
-                 NextTransitionStartTime.Seconds > 0 &&
+            if ( NextTransitionStartTime.Seconds > 0 &&
                  CurrentTime >= NextTransitionStartTime &&
-                 NextPeriod != nullptr )
+                 NextPeriod != nullptr &&
+                 CurrentTime.Seconds - NextTransitionStartTime.Seconds < NextPeriod->TransitionDurationInSeconds )
             {
                 TransitionState = ETransitionState::Transitioning;
                 TransitionTime.Seconds = 0.0f;
