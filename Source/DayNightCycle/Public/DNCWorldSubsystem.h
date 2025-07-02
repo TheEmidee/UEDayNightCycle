@@ -105,7 +105,6 @@ private:
 
     float TimeSpeed;
     bool bIsPaused;
-    bool bCanTransition;
     FDNCTimeStamp NextTransitionStartTime;
     FDNCTimeStamp TransitionDuration;
     FDNCTimeStamp TransitionTime;
